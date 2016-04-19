@@ -22,7 +22,7 @@ module ActiveModelSerializers
       def serializable_hash_for_collection(options)
         cache_attributes
 
-        serializer.map { |s| Attributes.new(s, instance_options).serializable_hash(options) }
+        serializer.map { |s| self.class.new(s, instance_options).serializable_hash(options) }
       end
 
       def serializable_hash_for_single_resource(options)
@@ -45,7 +45,7 @@ module ActiveModelSerializers
         return unless association.serializer && association.serializer.object
 
         opts = instance_options.merge(include: @include_tree[association.key])
-        Attributes.new(association.serializer, opts).serializable_hash(options)
+        self.class.new(association.serializer, opts).serializable_hash(options)
       end
 
       # no-op: Attributes adapter does not include meta data, because it does not support root.
